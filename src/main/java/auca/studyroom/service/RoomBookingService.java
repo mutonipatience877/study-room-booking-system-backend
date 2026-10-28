@@ -1,5 +1,6 @@
 package auca.studyroom.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -7,6 +8,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import auca.studyroom.domain.BookingStatus;
 import auca.studyroom.domain.RoomBooking;
 import auca.studyroom.domain.Student;
 import auca.studyroom.domain.Supervisor;
@@ -66,5 +68,15 @@ public class RoomBookingService {
         }
         roomBookingRepo.deleteById(id);
         return "Room booking deleted successfully";
+    }
+
+    // B2
+    public List<RoomBooking> getRoomBookingsByStatus(BookingStatus status) {
+        return roomBookingRepo.findByStatusOrderByBookingDateAsc(status);
+    }
+
+    // B3
+    public List<RoomBooking> getRoomBookingsBetween(LocalDate start, LocalDate end) {
+        return roomBookingRepo.findByBookingDateBetweenOrderByBookingDateAsc(start, end);
     }
 }

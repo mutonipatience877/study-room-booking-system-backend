@@ -59,4 +59,10 @@ public class StudentController {
         }
         return new ResponseEntity<>(returnedMessage, HttpStatus.NOT_FOUND);
     }
+
+    // B1
+    @GetMapping(value = "/by-faculty")
+    public ResponseEntity<List<Student>> getStudentsByFaculty(@RequestParam String faculty) {
+        return ResponseEntity.ok(studentServe.getStudentsByFaculty(faculty));
+    }
 }

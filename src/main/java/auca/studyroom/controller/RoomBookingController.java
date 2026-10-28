@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import auca.studyroom.domain.RoomBooking;
 import auca.studyroom.service.RoomBookingService;
+import java.time.LocalDate;
+import auca.studyroom.domain.BookingStatus;
 
 @RestController
 @RequestMapping(value = "/api/room-bookings")
@@ -60,5 +62,19 @@ public class RoomBookingController {
             return new ResponseEntity<>(returnedMessage, HttpStatus.OK);
         }
         return new ResponseEntity<>(returnedMessage, HttpStatus.NOT_FOUND);
+    }
+
+    // B2
+    @GetMapping(value = "/by-status")
+    public ResponseEntity<List<RoomBooking>> getRoomBookingsByStatus(@RequestParam BookingStatus status) {
+        return ResponseEntity.ok(roomBookingServe.getRoomBookingsByStatus(status));
+    }
+
+    // B3
+    @GetMapping(value = "/between")
+    public ResponseEntity<List<RoomBooking>> getRoomBookingsBetween(@RequestParam String start, @RequestParam String end) {
+        LocalDate startDate = LocalDate.parse(start);
+        LocalDate endDate = LocalDate.parse(end);
+        return ResponseEntity.ok(roomBookingServe.getRoomBookingsBetween(startDate, endDate));
     }
 }
