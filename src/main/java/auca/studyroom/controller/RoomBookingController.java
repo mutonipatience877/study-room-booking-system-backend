@@ -67,6 +67,9 @@ public class RoomBookingController {
         if (returnedMessage.equals("Room booking deleted successfully")) {
             return new ResponseEntity<>(returnedMessage, HttpStatus.OK);
         }
+        if (returnedMessage.equals("That room booking has usage records, delete them first")) {
+            return new ResponseEntity<>(returnedMessage, HttpStatus.CONFLICT);
+        }
         return new ResponseEntity<>(returnedMessage, HttpStatus.NOT_FOUND);
     }
 
@@ -95,5 +98,18 @@ public class RoomBookingController {
             return new ResponseEntity<>(returnedMessage, HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(returnedMessage, HttpStatus.BAD_REQUEST);
+    }
+
+    // F1
+    @GetMapping(value = "/stats/by-status")
+    public ResponseEntity<List<Object[]>> getRoomBookingStatsByStatus() {
+        return ResponseEntity.ok(roomBookingServe.getRoomBookingStatsByStatus());
+    }
+
+    // F2
+    @PatchMapping(value = "/cancel-day")
+    public ResponseEntity<String> cancelSupervisorDay(@RequestParam UUID supervisorId, @RequestParam String date) {
+        LocalDate day = LocalDate.parse(date);
+        return ResponseEntity.ok(roomBookingServe.cancelSupervisorDay(supervisorId, day));
     }
 }

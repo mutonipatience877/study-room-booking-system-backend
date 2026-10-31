@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import auca.studyroom.domain.BookingStatus;
 import auca.studyroom.domain.RoomBooking;
@@ -15,6 +16,7 @@ import auca.studyroom.domain.Supervisor;
 import auca.studyroom.repository.RoomBookingRepository;
 import auca.studyroom.repository.StudentRepository;
 import auca.studyroom.repository.SupervisorRepository;
+import auca.studyroom.repository.UsageRecordRepository;
 
 @Service
 public class RoomBookingService {
@@ -25,6 +27,8 @@ public class RoomBookingService {
     private StudentRepository studentRepo;
     @Autowired
     private SupervisorRepository supervisorRepo;
+    @Autowired
+    private UsageRecordRepository usageRecordRepo;
 
     public String saveRoomBooking(RoomBooking roomBooking, UUID studentId, UUID supervisorId) {
         Optional<Student> getStudent = studentRepo.findById(studentId);
@@ -74,8 +78,13 @@ public class RoomBookingService {
     }
 
     public String deleteRoomBooking(UUID id) {
-        if (!roomBookingRepo.existsById(id)) {
+        Optional<RoomBooking> getRoomBooking = roomBookingRepo.findById(id);
+        if (getRoomBooking.isEmpty()) {
             return "The room booking with that id does not exist";
+        }
+        // E3: protect a booking that already has usage records
+        if (usageRecordRepo.existsByRoomBooking(getRoomBooking.get())) {
+            return "That room booking has usage records, delete them first";
         }
         roomBookingRepo.deleteById(id);
         return "Room booking deleted successfully";
@@ -115,5 +124,17 @@ public class RoomBookingService {
         roomBooking.setStatus(newStatus);
         roomBookingRepo.save(roomBooking);
         return "Room booking status updated successfully";
+    }
+
+    // F1
+    public List<Object[]> getRoomBookingStatsByStatus() {
+        return roomBookingRepo.countRoomBookingsByStatus();
+    }
+
+    // F2 — @Transactional is required because the query changes data
+    @Transactional
+    public String cancelSupervisorDay(UUID supervisorId, LocalDate date) {
+        int cancelled = roomBookingRepo.cancelSupervisorDay(supervisorId, date);
+        return cancelled + " room bookings cancelled";
     }
 }
