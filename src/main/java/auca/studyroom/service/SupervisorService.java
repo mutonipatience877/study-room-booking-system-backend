@@ -82,4 +82,9 @@ public class SupervisorService {
         supervisorRepo.save(supervisor);
         return "Shift added to the supervisor";
     }
+
+    // C1
+    public List<Supervisor> getSupervisorsByShift(String name) {
+        return supervisorRepo.findSupervisorsByShiftName(name);
+    }
 }

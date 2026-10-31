@@ -59,4 +59,10 @@ public class ShiftController {
         }
         return new ResponseEntity<>(returnedMessage, HttpStatus.NOT_FOUND);
     }
+
+    // C3
+    @GetMapping(value = "/unused")
+    public ResponseEntity<List<Shift>> getUnusedShifts() {
+        return ResponseEntity.ok(shiftServe.getUnusedShifts());
+    }
 }

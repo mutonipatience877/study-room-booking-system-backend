@@ -59,4 +59,10 @@ public class StudyRoomController {
         }
         return new ResponseEntity<>(returnedMessage, HttpStatus.NOT_FOUND);
     }
+
+    // C2
+    @GetMapping(value = "/free")
+    public ResponseEntity<List<StudyRoom>> getFreeStudyRooms() {
+        return ResponseEntity.ok(studyRoomServe.getFreeStudyRooms());
+    }
 }

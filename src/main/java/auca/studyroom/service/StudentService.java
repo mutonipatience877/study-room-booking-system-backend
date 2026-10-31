@@ -9,12 +9,15 @@ import org.springframework.stereotype.Service;
 
 import auca.studyroom.domain.Student;
 import auca.studyroom.repository.StudentRepository;
+import auca.studyroom.repository.SupervisorRepository;
 
 @Service
 public class StudentService {
 
     @Autowired
     private StudentRepository studentRepo;
+    @Autowired
+    private SupervisorRepository supervisorRepo;
 
     public String saveStudent(Student student) {
         if (studentRepo.existsByRegNumber(student.getRegNumber())) {
@@ -57,5 +60,13 @@ public class StudentService {
     // B1
     public List<Student> getStudentsByFaculty(String faculty) {
         return studentRepo.findByFacultyIgnoreCaseOrderByLastNameAsc(faculty);
+    }
+
+    // C4
+    public Optional<List<Student>> getStudentsOfSupervisor(UUID supervisorId) {
+        if (!supervisorRepo.existsById(supervisorId)) {
+            return Optional.empty();
+        }
+        return Optional.of(studentRepo.findStudentsOfSupervisor(supervisorId));
     }
 }

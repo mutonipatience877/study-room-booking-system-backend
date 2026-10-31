@@ -65,4 +65,14 @@ public class StudentController {
     public ResponseEntity<List<Student>> getStudentsByFaculty(@RequestParam String faculty) {
         return ResponseEntity.ok(studentServe.getStudentsByFaculty(faculty));
     }
+
+    // C4
+    @GetMapping(value = "/of-supervisor/{supervisorId}")
+    public ResponseEntity<?> getStudentsOfSupervisor(@PathVariable UUID supervisorId) {
+        Optional<List<Student>> students = studentServe.getStudentsOfSupervisor(supervisorId);
+        if (students.isEmpty()) {
+            return new ResponseEntity<>("The supervisor with that id does not exist", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(students.get(), HttpStatus.OK);
+    }
 }

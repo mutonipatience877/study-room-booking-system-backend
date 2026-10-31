@@ -73,4 +73,10 @@ public class SupervisorController {
         }
         return new ResponseEntity<>(returnedMessage, HttpStatus.NOT_FOUND);
     }
+
+    // C1
+    @GetMapping(value = "/by-shift")
+    public ResponseEntity<List<Supervisor>> getSupervisorsByShift(@RequestParam String name) {
+        return ResponseEntity.ok(supervisorServe.getSupervisorsByShift(name));
+    }
 }
