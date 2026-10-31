@@ -18,4 +18,7 @@ public interface RoomBookingRepository extends JpaRepository<RoomBooking, UUID> 
 
     // B3 — DERIVED (Between, both dates inclusive)
     List<RoomBooking> findByBookingDateBetweenOrderByBookingDateAsc(LocalDate start, LocalDate end);
+
+    // D1 — DERIVED (existsBy + And + StatusNot)
+    boolean existsBySupervisorIdAndBookingDateAndStatusNot(UUID supervisorId, LocalDate bookingDate, BookingStatus status);
 }

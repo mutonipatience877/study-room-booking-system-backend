@@ -1,5 +1,6 @@
 package auca.studyroom.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -9,10 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import auca.studyroom.domain.BookingStatus;
 import auca.studyroom.domain.RoomBooking;
 import auca.studyroom.service.RoomBookingService;
-import java.time.LocalDate;
-import auca.studyroom.domain.BookingStatus;
 
 @RestController
 @RequestMapping(value = "/api/room-bookings")
@@ -28,6 +28,12 @@ public class RoomBookingController {
         String returnedMessage = roomBookingServe.saveRoomBooking(roomBooking, studentId, supervisorId);
         if (returnedMessage.equals("Room booking saved successfully")) {
             return new ResponseEntity<>(returnedMessage, HttpStatus.CREATED);
+        }
+        if (returnedMessage.equals("Room booking date cannot be in the past")) {
+            return new ResponseEntity<>(returnedMessage, HttpStatus.BAD_REQUEST);
+        }
+        if (returnedMessage.equals("Supervisor already has a booking on that date")) {
+            return new ResponseEntity<>(returnedMessage, HttpStatus.CONFLICT);
         }
         return new ResponseEntity<>(returnedMessage, HttpStatus.NOT_FOUND);
     }
@@ -76,5 +82,18 @@ public class RoomBookingController {
         LocalDate startDate = LocalDate.parse(start);
         LocalDate endDate = LocalDate.parse(end);
         return ResponseEntity.ok(roomBookingServe.getRoomBookingsBetween(startDate, endDate));
+    }
+
+    // D2
+    @PatchMapping(value = "/{id}/status")
+    public ResponseEntity<String> updateRoomBookingStatus(@PathVariable UUID id, @RequestParam BookingStatus status) {
+        String returnedMessage = roomBookingServe.updateRoomBookingStatus(id, status);
+        if (returnedMessage.equals("Room booking status updated successfully")) {
+            return new ResponseEntity<>(returnedMessage, HttpStatus.OK);
+        }
+        if (returnedMessage.equals("The room booking with that id does not exist")) {
+            return new ResponseEntity<>(returnedMessage, HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(returnedMessage, HttpStatus.BAD_REQUEST);
     }
 }

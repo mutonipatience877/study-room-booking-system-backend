@@ -79,4 +79,17 @@ public class SupervisorController {
     public ResponseEntity<List<Supervisor>> getSupervisorsByShift(@RequestParam String name) {
         return ResponseEntity.ok(supervisorServe.getSupervisorsByShift(name));
     }
+
+    // D4
+    @PatchMapping(value = "/{supervisorId}/study-room")
+    public ResponseEntity<String> changeStudyRoom(@PathVariable UUID supervisorId, @RequestParam int roomNumber) {
+        String returnedMessage = supervisorServe.changeStudyRoom(supervisorId, roomNumber);
+        if (returnedMessage.equals("Study room changed successfully")) {
+            return new ResponseEntity<>(returnedMessage, HttpStatus.OK);
+        }
+        if (returnedMessage.equals("That study room is taken by another supervisor")) {
+            return new ResponseEntity<>(returnedMessage, HttpStatus.CONFLICT);
+        }
+        return new ResponseEntity<>(returnedMessage, HttpStatus.NOT_FOUND);
+    }
 }

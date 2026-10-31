@@ -87,4 +87,23 @@ public class SupervisorService {
     public List<Supervisor> getSupervisorsByShift(String name) {
         return supervisorRepo.findSupervisorsByShiftName(name);
     }
+
+    // D4
+    public String changeStudyRoom(UUID supervisorId, int roomNumber) {
+        Optional<Supervisor> getSupervisor = supervisorRepo.findById(supervisorId);
+        if (getSupervisor.isEmpty()) {
+            return "The supervisor with that id does not exist";
+        }
+        Optional<StudyRoom> getStudyRoom = studyRoomRepo.findByRoomNumber(roomNumber);
+        if (getStudyRoom.isEmpty()) {
+            return "The study room with that roomNumber does not exist";
+        }
+        if (supervisorRepo.existsByStudyRoomAndIdNot(getStudyRoom.get(), supervisorId)) {
+            return "That study room is taken by another supervisor";
+        }
+        Supervisor supervisor = getSupervisor.get();
+        supervisor.setStudyRoom(getStudyRoom.get());
+        supervisorRepo.save(supervisor);
+        return "Study room changed successfully";
+    }
 }

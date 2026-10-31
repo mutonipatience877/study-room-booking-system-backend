@@ -35,6 +35,18 @@ public class RoomBookingService {
         if (getSupervisor.isEmpty()) {
             return "The supervisor with that id does not exist";
         }
+        // D1 rule 1: no booking in the past
+        if (roomBooking.getBookingDate().isBefore(LocalDate.now())) {
+            return "Room booking date cannot be in the past";
+        }
+        // D1 rule 2: the supervisor cannot have two active bookings on the same date
+        boolean alreadyBooked = roomBookingRepo.existsBySupervisorIdAndBookingDateAndStatusNot(
+                supervisorId, roomBooking.getBookingDate(), BookingStatus.CANCELLED);
+        if (alreadyBooked) {
+            return "Supervisor already has a booking on that date";
+        }
+        // D1 rule 3: a new booking always starts as REQUESTED
+        roomBooking.setStatus(BookingStatus.REQUESTED);
         roomBooking.setStudent(getStudent.get());
         roomBooking.setSupervisor(getSupervisor.get());
         roomBookingRepo.save(roomBooking);
@@ -58,7 +70,6 @@ public class RoomBookingService {
         roomBookingToUpdate.setBookingDate(updatedRoomBooking.getBookingDate());
         roomBookingToUpdate.setStartHour(updatedRoomBooking.getStartHour());
         roomBookingToUpdate.setPurpose(updatedRoomBooking.getPurpose());
-        roomBookingToUpdate.setStatus(updatedRoomBooking.getStatus());
         return Optional.of(roomBookingRepo.save(roomBookingToUpdate));
     }
 
@@ -78,5 +89,31 @@ public class RoomBookingService {
     // B3
     public List<RoomBooking> getRoomBookingsBetween(LocalDate start, LocalDate end) {
         return roomBookingRepo.findByBookingDateBetweenOrderByBookingDateAsc(start, end);
+    }
+
+    // D2 — the allowed arrows of the status flow
+    private boolean canChangeStatus(BookingStatus from, BookingStatus to) {
+        if (from == BookingStatus.REQUESTED) {
+            return to == BookingStatus.APPROVED || to == BookingStatus.CANCELLED;
+        }
+        if (from == BookingStatus.APPROVED) {
+            return to == BookingStatus.USED || to == BookingStatus.CANCELLED;
+        }
+        return false; // USED and CANCELLED are final
+    }
+
+    // D2
+    public String updateRoomBookingStatus(UUID id, BookingStatus newStatus) {
+        Optional<RoomBooking> getRoomBooking = roomBookingRepo.findById(id);
+        if (getRoomBooking.isEmpty()) {
+            return "The room booking with that id does not exist";
+        }
+        RoomBooking roomBooking = getRoomBooking.get();
+        if (!canChangeStatus(roomBooking.getStatus(), newStatus)) {
+            return "Cannot change status from " + roomBooking.getStatus() + " to " + newStatus;
+        }
+        roomBooking.setStatus(newStatus);
+        roomBookingRepo.save(roomBooking);
+        return "Room booking status updated successfully";
     }
 }
