@@ -1,0 +1,576 @@
+{
+  "info": {
+    "_postman_id": "669ded7b-b60c-4a96-9653-d7e9aba864ed",
+    "name": "My Collection",
+    "description": "### Welcome to Postman! This is your first collection.\n\nCollections are your starting point for building and testing APIs. You can use this one to:\n\n• Group related requests  \n• Test your API in real-world scenarios  \n• Document and share your requests\n\nUpdate the name and overview whenever you’re ready to make it yours.\n\n[Learn more about Postman Collections.](https://learning.postman.com/docs/collections/collections-overview/)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "58556586",
+    "_collection_link": "https://go.postman.co/collection/58556586-669ded7b-b60c-4a96-9653-d7e9aba864ed?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Get data",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "postman-echo.com/get",
+          "host": [
+            "postman-echo",
+            "com"
+          ],
+          "path": [
+            "get"
+          ]
+        },
+        "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+      },
+      "response": []
+    },
+    {
+      "name": "Post data",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Successful POST request\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+              "});",
+              ""
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\t\"name\": \"Add your name in the body\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "postman-echo.com/post",
+          "host": [
+            "postman-echo",
+            "com"
+          ],
+          "path": [
+            "post"
+          ]
+        },
+        "description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+      },
+      "response": []
+    },
+    {
+      "name": "New Request",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": ""
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "New Request",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"firstName\":\"Sharon\",\r\n    \"lastName\":\"UWASE\",\r\n    \"dateOfBirth\":\"2000-05-24\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/Patients/save",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "Patients",
+            "save"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "New Request",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": ""
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "New Request",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"firstName\":\"Eric\",\"lastName\":\"Bizimana\",\"dateOfBirth\":\"1990-01-20\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/doctors",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "doctors"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "http://localhost:8080/api/students/of-supervisor/4dae1319-414c-4003-b767-4a7e94ae30d7",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/students/of-supervisor/4dae1319-414c-4003-b767-4a7e94ae30d7",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "students",
+            "of-supervisor",
+            "4dae1319-414c-4003-b767-4a7e94ae30d7"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "http://localhost:8080/api/shifts/all",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const base = \"http://localhost:8080/api/\";\r\npm.sendRequest(base + \"students/all\", (e, r) => r.json().forEach(s => pm.globals.set(\"student_\" + s.regNumber, s.id)));\r\npm.sendRequest(base + \"supervisors/all\", (e, r) => r.json().forEach(s => pm.globals.set(\"sup_\" + s.lastName, s.id)));\r\npm.sendRequest(base + \"shifts/all\", (e, r) => r.json().forEach(s => pm.globals.set(\"shift_\" + s.name, s.id)));\r\npm.sendRequest(base + \"room-bookings/all\", (e, r) => r.json().forEach(b => pm.globals.set(\"booking_\" + b.bookingDate + \"_\" + b.startHour, b.id)));\r\npm.globals.set(\"fakeId\", \"00000000-0000-0000-0000-000000000000\");"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/shifts/all",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "shifts",
+            "all"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "1111111111111111111122",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"bookingDate\": \"2026-12-15\", \"status\": \"USED\", \"startHour\": 9, \"purpose\": \"Final exam revision\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/room-bookings/save?studentId={{student_26122}}&supervisorId={{sup_Uwase}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "room-bookings",
+                "save"
+              ],
+              "query": [
+                {
+                  "key": "studentId",
+                  "value": "{{student_26122}}"
+                },
+                {
+                  "key": "supervisorId",
+                  "value": "{{sup_Uwase}}"
+                }
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "text",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain;charset=UTF-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "45"
+            },
+            {
+              "key": "Date",
+              "value": "Sun, 01 Nov 2026 08:12:26 GMT"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=60"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            }
+          ],
+          "cookie": [],
+          "body": "Supervisor already has a booking on that date"
+        }
+      ]
+    },
+    {
+      "name": "D1",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"bookingDate\": \"2026-12-15\", \"status\": \"USED\", \"startHour\": 9, \"purpose\": \"Final exam revision\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/room-bookings/save?studentId={{student_26122}}&supervisorId={{sup_Uwase}}",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "room-bookings",
+            "save"
+          ],
+          "query": [
+            {
+              "key": "studentId",
+              "value": "{{student_26122}}"
+            },
+            {
+              "key": "supervisorId",
+              "value": "{{sup_Uwase}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "D2",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/room-bookings/{{booking_2026-10-28_11}}/status?status=APPROVED",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "room-bookings",
+            "{{booking_2026-10-28_11}}",
+            "status"
+          ],
+          "query": [
+            {
+              "key": "status",
+              "value": "APPROVED"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "D3",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/supervisors/{{sup_Uwase}}/shifts/{{shift_Evening}}",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "supervisors",
+            "{{sup_Uwase}}",
+            "shifts",
+            "{{shift_Evening}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "D4",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/supervisors/{{sup_Uwase}}/study-room?roomNumber=301",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "supervisors",
+            "{{sup_Uwase}}",
+            "study-room"
+          ],
+          "query": [
+            {
+              "key": "roomNumber",
+              "value": "301"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "E1",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"equipment\": \"Air conditioner\", \"remarks\": \"Remote missing\", \"occupants\": 3}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/usage-records/save?roomBookingId={{booking_2026-10-12_10}}",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "usage-records",
+            "save"
+          ],
+          "query": [
+            {
+              "key": "roomBookingId",
+              "value": "{{booking_2026-10-12_10}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "E2",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/usage-records/student/26118",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "usage-records",
+            "student",
+            "26118"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "E3",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/usage-records/delete/{{usage_Temporary}}",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "usage-records",
+            "delete",
+            "{{usage_Temporary}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "F1",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/room-bookings/stats/by-status",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "room-bookings",
+            "stats",
+            "by-status"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "F2",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/room-bookings/cancel-day?supervisorId={{sup_Mugisha}}&date=2026-10-20",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "room-bookings",
+            "cancel-day"
+          ],
+          "query": [
+            {
+              "key": "supervisorId",
+              "value": "{{sup_Mugisha}}"
+            },
+            {
+              "key": "date",
+              "value": "2026-10-20"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
