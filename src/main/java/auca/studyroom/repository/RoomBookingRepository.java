@@ -35,4 +35,8 @@ public interface RoomBookingRepository extends JpaRepository<RoomBooking, UUID> 
             "WHERE r.supervisor.id = :supervisorId AND r.bookingDate = :date " +
             "AND r.status <> auca.studyroom.domain.BookingStatus.USED")
     int cancelSupervisorDay(@Param("supervisorId") UUID supervisorId, @Param("date") LocalDate date);
+    // Bonus 1 — DERIVED countBy (used by the dashboard)
+    long countByBookingDate(LocalDate bookingDate);
+
+    long countByStatus(BookingStatus status);
 }

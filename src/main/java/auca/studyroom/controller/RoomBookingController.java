@@ -112,4 +112,17 @@ public class RoomBookingController {
         LocalDate day = LocalDate.parse(date);
         return ResponseEntity.ok(roomBookingServe.cancelSupervisorDay(supervisorId, day));
     }
+    // Bonus 2: page by page
+    @GetMapping(value = "/page")
+    public ResponseEntity<org.springframework.data.domain.Page<RoomBooking>> getRoomBookingsPage(@RequestParam int page,
+                                                                                                 @RequestParam int size,
+                                                                                                 @RequestParam String sort) {
+        String[] sortParts = sort.split(",");
+        org.springframework.data.domain.Sort.Direction direction = sortParts.length > 1
+                ? org.springframework.data.domain.Sort.Direction.fromString(sortParts[1])
+                : org.springframework.data.domain.Sort.Direction.ASC;
+        org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(
+                page, size, org.springframework.data.domain.Sort.by(direction, sortParts[0]));
+        return ResponseEntity.ok(roomBookingServe.getRoomBookingsPage(pageable));
+    }
 }

@@ -137,4 +137,8 @@ public class RoomBookingService {
         int cancelled = roomBookingRepo.cancelSupervisorDay(supervisorId, date);
         return cancelled + " room bookings cancelled";
     }
+    // Bonus 2: page by page
+    public org.springframework.data.domain.Page<RoomBooking> getRoomBookingsPage(org.springframework.data.domain.Pageable pageable) {
+        return roomBookingRepo.findAll(pageable);
+    }
 }
